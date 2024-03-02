@@ -1,0 +1,20 @@
+{
+  "name": "imda-data-collection-prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "supabase:start": "supabase start",
+    "supabase:status": "supabase status",
+    "supabase:migration:up": "supabase migration up",
+    "supabase:function:serve": "supabase functions serve",
+    "supabase:stop": "supabase stop",
+    "supabase:stop:no-backup": "supabase stop --no-backup"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "supabase": "^1.145.4"
+  }
+}
