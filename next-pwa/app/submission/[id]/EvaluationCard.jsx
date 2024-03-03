@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
-  TextInput,
   Button,
   Group,
-  Box,
   Textarea,
-  Autocomplete,
   Card,
   Title,
   NumberInput,
@@ -18,8 +15,6 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
-
-import { languageOptions } from "@/app/constants";
 
 const schema = z.object({
   feedback: z
@@ -34,8 +29,12 @@ const schema = z.object({
     .max(10, { message: "Maximum score is 10" }),
 });
 
-export default function EvaluationCard({ evaluation, ...props }) {
+export default function EvaluationCard({
+  evaluation: initialEvaluation,
+  ...props
+}) {
   const params = useParams();
+  const [evaluation, setEvaluation] = useState(initialEvaluation);
   const form = useForm({
     initialValues: {
       feedback: evaluation?.feedback ?? "",
@@ -45,10 +44,9 @@ export default function EvaluationCard({ evaluation, ...props }) {
     validate: zodResolver(schema),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
   const supabase = createClientComponentClient();
 
-  const handleCreate = async ({ ...payload }) => {
+  const handleCreate = async (payload) => {
     setIsSubmitting(true);
     try {
       const { error } = await supabase
@@ -62,7 +60,11 @@ export default function EvaluationCard({ evaluation, ...props }) {
         console.error(error);
         throw new Error(error.message);
       }
-      router.reload();
+      notifications.show({
+        title: "Evaluation submitted",
+        message: "Thank you for your evaluation!",
+      });
+      setEvaluation(payload);
     } catch (error) {
       notifications.show({
         color: "red",

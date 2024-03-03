@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Avatar,
-  Card,
-  List,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Avatar, Card, List, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -16,6 +10,7 @@ import CircularProgress from "@/app/components/Loading/CircularProgress";
 import { AuthOnly } from "@/app/components/Auth";
 import { useAuthContext } from "@/app/hooks/auth";
 import EvaluationCard from "./EvaluationCard";
+import { IsHelpfulButtons } from "@/app/components/Button";
 
 export default function Page() {
   const params = useParams();
@@ -37,7 +32,8 @@ export default function Page() {
             user_id,
             edit,
             feedback,
-            score
+            score,
+            is_helpful
           )
         `,
       )
@@ -74,15 +70,15 @@ export default function Page() {
               Evaluations
             </Title>
             {submission?.evaluation?.length ? (
-              <List w="100%">
+              <List w="100%" mt="md">
                 {submission.evaluation.map((evaluation) => (
                   <Link
                     key={evaluation.user_id}
                     href={`/submission/${params.id}/evaluation/${evaluation.user_id}`}
                   >
-                    <List.Item icon={<Avatar />} w="100%">
+                    <List.Item icon={<Avatar />} w="100%" mb="md">
                       <Card>
-                        <Title size="h5" fw={700} mt="md">
+                        <Title size="h5" fw={700}>
                           Feedback
                         </Title>
                         <Text ta="justify">{submission?.title}</Text>
@@ -90,6 +86,11 @@ export default function Page() {
                           Evaluator&apos;s version
                         </Title>
                         <Text ta="justify">{evaluation?.edit}</Text>
+                        <IsHelpfulButtons
+                          id={params.id}
+                          user_id={evaluation.user_id}
+                          initialState={evaluation.is_helpful}
+                        />
                       </Card>
                     </List.Item>
                   </Link>

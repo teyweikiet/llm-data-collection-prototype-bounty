@@ -27,12 +27,14 @@ export default function RootLayout({ children }) {
       <head>
         <ColorSchemeScript defaultColorScheme="dark" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} style={{ height: "100dvh" }}>
         <MantineProvider defaultColorScheme="dark">
           <AuthProvider>
             <Container size="65rem" px="s" h="calc(100% - 60px)">
               <Navbar />
-              <Container px="md">{children}</Container>
+              <Container px="md" h="100%">
+                {children}
+              </Container>
             </Container>
             <Notifications />
           </AuthProvider>

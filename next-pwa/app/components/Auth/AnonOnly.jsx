@@ -19,6 +19,11 @@ export function AnonOnly({ children, redirectUrl = "/" }) {
     }
   }, [user, router]);
 
+  /**
+   * show loading indicator when
+   * (1) data is still pending
+   * (2) redirect conditions are met
+   */
   if (isLoading || user)
     return (
       <Stack align="center" justify="center" h="100%">

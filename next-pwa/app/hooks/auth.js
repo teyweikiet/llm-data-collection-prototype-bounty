@@ -45,8 +45,8 @@ export const AuthProvider = ({ children }) => {
             console.error(error);
           }
           setProfile(data[0]);
-          isFetchingProfile && setIsFetchingProfile(false);
-        });
+        })
+        .finally(() => setIsFetchingProfile(false));
     }
   }, [user]);
 

@@ -23,7 +23,16 @@ export function AuthOnly({ children, onboardedOnly = true }) {
     }
   }, [user, profile, isFetchingProfile, isLoading, router]);
 
-  if (isLoading)
+  /**
+   * show loading indicator when
+   * (1) data is still pending
+   * (2) redirect conditions are met
+   */
+  if (
+    isLoading ||
+    !user ||
+    (onboardedOnly && (isFetchingProfile || !profile?.first_name))
+  )
     return (
       <Stack align="center" justify="center" h="100%">
         <Loader size={50} />
