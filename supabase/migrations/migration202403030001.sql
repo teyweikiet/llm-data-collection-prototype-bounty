@@ -239,3 +239,47 @@ for all
 to authenticated
 using (true)
 with check (true);
+
+-- trigger the function every time a user is created
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+CREATE OR REPLACE FUNCTION public.get_user_role(user_id uuid)
+ RETURNS roles
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $$
+BEGIN
+  select role from public.profile where id = get_user_role.user_id;
+END;
+$$
+;
+
+-- revoke
+-- update
+--   on table public.posts
+-- from
+--   authenticated;
+
+-- grant
+-- update
+--   (title, content) on table public.posts to authenticated;
+
+revoke
+update
+  on table public.posts
+from
+  authenticated;
+
+create policy "Policy with security definer functions"
+on "public"."profiles"
+as RESTRICTIVE
+for INSERT, UPDATE, DELETE
+to authenticated
+using (
+ (select get_user_role(auth.uid())) = admin
+);
+
+(select get_user_role(auth.uid())) = admin OR (select auth.uid()) = id
